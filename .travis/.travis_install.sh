@@ -49,17 +49,24 @@ java -version
 if [ $noThirdEyeChange -ne 0 ]; then
   echo "Full Pinot build"
   echo "No ThirdEye changes"
+
+echo "Fixing git setup for $TRAVIS_BRANCH"
+git checkout ${TRAVIS_BRANCH}
+git branch -u origin/${TRAVIS_BRANCH}
+git config branch.${TRAVIS_BRANCH}.remote origin
+git config branch.${TRAVIS_BRANCH}.merge refs/heads/${TRAVIS_BRANCH}
+
   if [ "$TRAVIS_JDK_VERSION" != 'oraclejdk8' ]; then
     # JDK 11 prints more logs exceeding Travis limits.
-    mvn clean install -B -DskipTests=true -Pbin-dist -Dmaven.javadoc.skip=true ${DEPLOY_BUILD_OPTS} ${KAFKA_BUILD_OPTS} > /tmp/mvn_build_log
+    mvn clean install -B -DscmBranch="${TRAVIS_BRANCH}" -DskipTests=true -Pbin-dist -Dmaven.javadoc.skip=true ${KAFKA_BUILD_OPTS} > /tmp/mvn_build_log
     if [ $? -eq 0 ]; then
       exit 0
     else
-      tail -1000 /tmp/mvn_build_log
+      cat /tmp/mvn_build_log
       exit 1
     fi
   else
-    mvn clean install -B -DskipTests=true -Pbin-dist -Dmaven.javadoc.skip=true ${DEPLOY_BUILD_OPTS} ${KAFKA_BUILD_OPTS} || exit $?
+    mvn clean install -B -DscmBranch="${TRAVIS_BRANCH}" -DskipTests=true -Pbin-dist -Dmaven.javadoc.skip=true ${KAFKA_BUILD_OPTS} || exit $?
   fi
 fi
 

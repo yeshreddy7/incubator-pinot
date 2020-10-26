@@ -67,7 +67,11 @@ public class LuceneDocIdCollector implements Collector {
 
       @Override
       public void collect(int doc) throws IOException {
-        _docIds.add(_docIdTranslator.getPinotDocId(doc));
+        // even though we merge lucene sub-indexes, there could still be cases
+        // that can lead to multiple sub-indexes. For search on multiple
+        // sub-indexes, we need to use compute the absolute lucene docID across
+        // sub-indexes because that's how the lookup table in docIdTranslator is built
+        _docIds.add(_docIdTranslator.getPinotDocId(context.docBase + doc));
       }
     };
   }
