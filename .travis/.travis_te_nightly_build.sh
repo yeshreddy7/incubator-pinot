@@ -20,17 +20,17 @@
 
 if [ -n "${DEPLOY_BUILD_OPTS}" ]; then
   echo "Deploying ThirdEye to bintray"
-  # Generate new version number
-  cd thirdeye/
-  BUILD_VERSION=$(grep -E "<revision>(.*)</revision>" pom.xml | cut -d'>' -f2 | cut -d'<' -f1)
-  echo "Current build version: $BUILD_VERSION${DEV_VERSION}"
-  mvn versions:set -DnewVersion="$BUILD_VERSION${DEV_VERSION}" -q -B
-  mvn versions:commit -q -B
-  # Deploy ThirdEye backend to bintray
-  mvn -pl '!thirdeye-frontend' deploy -s ../.travis/.ci.settings.xml -DskipTests -q -DaltDeploymentRepository=bintray-linkedin-maven::default::'https://api.bintray.com/maven/linkedin/maven/thirdeye/;publish=1;override=1'
-  # Deploy ThirdEye frontend to NPM
-  cd thirdeye-frontend/
-  npm version ${BUILD_VERSION}${DEV_VERSION}
-  npm-login-noninteractive
-  npm publish
+#  # Generate new version number
+#  cd thirdeye/
+#  BUILD_VERSION=$(grep -E "<revision>(.*)</revision>" pom.xml | cut -d'>' -f2 | cut -d'<' -f1)
+#  echo "Current build version: $BUILD_VERSION${DEV_VERSION}"
+#  mvn versions:set -DnewVersion="$BUILD_VERSION${DEV_VERSION}" -q -B
+#  mvn versions:commit -q -B
+#  # Deploy ThirdEye backend to bintray
+#  mvn -pl '!thirdeye-frontend' deploy -s ../.travis/.ci.settings.xml -DskipTests -q -DaltDeploymentRepository=bintray-linkedin-maven::default::'https://api.bintray.com/maven/linkedin/maven/thirdeye/;publish=1;override=1'
+#  # Deploy ThirdEye frontend to NPM
+#  cd thirdeye-frontend/
+#  npm version ${BUILD_VERSION}${DEV_VERSION}
+#  npm-login-noninteractive
+#  npm publish
 fi

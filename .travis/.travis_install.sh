@@ -60,14 +60,27 @@ if [ $noThirdEyeChange -ne 0 ]; then
   ls -al /tmp/
   du -sh /tmp/
   du -sh /tmp/*
+  df /tmp
 
   if [ "$TRAVIS_JDK_VERSION" != 'oraclejdk8' ]; then
     # JDK 11 prints more logs exceeding Travis limits.
-    mvn clean install -B -DscmBranch="${TRAVIS_BRANCH}" -DskipTests=true -Pbin-dist -Dmaven.javadoc.skip=true ${KAFKA_BUILD_OPTS} > /tmp/mvn_build_log
+    mvn clean install -B -DscmBranch="${TRAVIS_BRANCH}" -DskipTests=true -Pbin-dist -Dmaven.javadoc.skip=true ${KAFKA_BUILD_OPTS} > /tmp/mvn_build_log.log
     if [ $? -eq 0 ]; then
+      ls -al /tmp/
+      du -sh /tmp/
+      du -sh /tmp/*
+      df /tmp
+      du -sh /tmp/mvn_build_log.log
+      wc -l /tmp/mvn_build_log.log
+      ls -al /tmp/mvn_build_log.log
+#        head -1000 /tmp/mvn_build_log.log
+      tail --help
+      tail --lines=1000 /tmp/mvn_build_log.log
+      sleep 10
       exit 0
     else
-      cat /tmp/mvn_build_log
+      cat /tmp/mvn_build_log.log
+      sleep 10
       exit 1
     fi
   else
