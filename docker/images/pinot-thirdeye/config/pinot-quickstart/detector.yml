@@ -15,7 +15,6 @@ server:
       port: 1868
 alert: false
 autoload: true
-classifier: false
 holidayEventsLoader: false
 mockEventsLoader: true
 monitor: true
